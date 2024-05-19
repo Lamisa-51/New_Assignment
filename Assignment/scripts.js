@@ -20,43 +20,58 @@ document.addEventListener("DOMContentLoaded", function() {
     function addTask() {
         const taskText = taskInput.value.trim();
         if (taskText !== "") {
-            const li = document.createElement("li");
-            li.setAttribute("draggable", "true");
-
-            const span = document.createElement("span");
-            span.textContent = taskText;
-            span.addEventListener("dblclick", function() {
-                editTask(span);
-            });
-            li.appendChild(span);
-
-            const buttonsDiv = document.createElement("div");
-            buttonsDiv.classList.add("task-buttons");
-
-            const completeButton = document.createElement("button");
-            completeButton.textContent = "Complete";
-            completeButton.classList.add("complete");
-            completeButton.addEventListener("click", function() {
-                li.classList.toggle("completed");
-                saveTasks();
-            });
-            buttonsDiv.appendChild(completeButton);
-
-            const deleteButton = document.createElement("button");
-            deleteButton.textContent = "Delete";
-            deleteButton.classList.add("delete");
-            deleteButton.addEventListener("click", function() {
-                taskList.removeChild(li);
-                saveTasks();
-            });
-            buttonsDiv.appendChild(deleteButton);
-
-            li.appendChild(buttonsDiv);
+            const li = createTaskElement(taskText, false);
             taskList.appendChild(li);
             taskInput.value = "";
             saveTasks();
-            addDragAndDrop(li);
         }
+    }
+
+    function createTaskElement(taskText, completed) {
+        const li = document.createElement("li");
+        li.setAttribute("draggable", "true");
+
+        const span = document.createElement("span");
+        span.textContent = taskText;
+        li.appendChild(span);
+
+        const buttonsDiv = document.createElement("div");
+        buttonsDiv.classList.add("task-buttons");
+
+        const completeButton = document.createElement("button");
+        completeButton.textContent = "Complete";
+        completeButton.classList.add("complete");
+        completeButton.addEventListener("click", function() {
+            li.classList.toggle("completed");
+            saveTasks();
+        });
+        buttonsDiv.appendChild(completeButton);
+
+        const editButton = document.createElement("button");
+        editButton.textContent = "Edit";
+        editButton.classList.add("edit");
+        editButton.addEventListener("click", function() {
+            editTask(span);
+        });
+        buttonsDiv.appendChild(editButton);
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.classList.add("delete");
+        deleteButton.addEventListener("click", function() {
+            taskList.removeChild(li);
+            saveTasks();
+        });
+        buttonsDiv.appendChild(deleteButton);
+
+        li.appendChild(buttonsDiv);
+
+        if (completed) {
+            li.classList.add("completed");
+        }
+
+        addDragAndDrop(li);
+        return li;
     }
 
     function editTask(span) {
@@ -94,53 +109,15 @@ document.addEventListener("DOMContentLoaded", function() {
     function loadTasks() {
         const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
         tasks.forEach(task => {
-            const li = document.createElement("li");
-            li.setAttribute("draggable", "true");
-
-            const span = document.createElement("span");
-            span.textContent = task.text;
-            span.addEventListener("dblclick", function() {
-                editTask(span);
-            });
-            li.appendChild(span);
-
-            const buttonsDiv = document.createElement("div");
-            buttonsDiv.classList.add("task-buttons");
-
-            const completeButton = document.createElement("button");
-            completeButton.textContent = "Complete";
-            completeButton.classList.add("complete");
-            completeButton.addEventListener("click", function() {
-                li.classList.toggle("completed");
-                saveTasks();
-            });
-            buttonsDiv.appendChild(completeButton);
-
-            const deleteButton = document.createElement("button");
-            deleteButton.textContent = "Delete";
-            deleteButton.classList.add("delete");
-            deleteButton.addEventListener("click", function() {
-                taskList.removeChild(li);
-                saveTasks();
-            });
-            buttonsDiv.appendChild(deleteButton);
-
-            if (task.completed) {
-                li.classList.add("completed");
-            }
-
-            li.appendChild(buttonsDiv);
+            const li = createTaskElement(task.text, task.completed);
             taskList.appendChild(li);
-            addDragAndDrop(li);
         });
     }
 
     function addDragAndDrop(li) {
         li.addEventListener("dragstart", function(event) {
-            event.dataTransfer.setData("text/plain", event.target.id);
-            setTimeout(() => {
-                li.classList.add("dragging");
-            }, 0);
+            event.dataTransfer.setData("text/plain", null);
+            li.classList.add("dragging");
         });
 
         li.addEventListener("dragend", function() {
