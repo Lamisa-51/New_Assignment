@@ -1,0 +1,68 @@
+
+LAPTOP USING SHORTCUTS:
+
+Windows + ctrl + o = keyboard
+Windows + G = ss/voice record
+Windows + X + U(2times)
+Windows + O = open
+Windows + f = find
+windows + l = lock screen
+Windows + c = copy
+Windows + v = paste
+windows + x = cut
+
+1.Talk to books ai website
+2.imglarger.com(photo quality)
+3.write sonic(like chatgpt)
+4.steve.ai(text io vedio)
+5.autodraw.com(drawing)
+6.resumaker.ai(making resume)
+7.Teachable machine(train computer to recognize things)
+8.Durable Al website builder(making website)
+9'Flutterflow.io(making mobile apps with drag and drops)
+10.Freeconvert.com(convert any file in an format)
+
+LOOKMOVIESS.COM(best VAi best)
+
+-------------------------++++++++++++++++++---------------------++++++++++++---------------------============-------+++++
+#include <bits/stdc++.h>
+using namespace std;
+
+int N, A[100001];
+
+int main() {
+	cin >> N;
+	for(int i = 1; i <= N; i++)
+	    cin >> A[i];
+	    
+	int previous = 0;
+	int longest_till_now = 0;
+	int current_streak = 0;
+	for(int i = 1; i <= N; i++)
+	{
+	    if(A[i] == 0)
+	    {
+	        previous = 0;
+	        continue;
+	    }
+	    else if(A[i] == 1)
+	    {
+	        if(previous == 0)
+	        {
+	            previous = 1;
+	            current_streak = 1;
+	            longest_till_now = max (longest_till_now, current_streak); 
+	        }
+	        else if(previous == 1)
+	        {
+	            current_streak = current_streak + 1;
+	            longest_till_now = max (longest_till_now, current_streak); 
+	        }
+	    }
+	}
+	
+	cout << longest_till_now << endl;
+	
+	return 0;
+}
+============----------------======================-----------------=================================----------------------------
